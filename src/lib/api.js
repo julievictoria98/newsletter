@@ -10,10 +10,13 @@ const headersList = {
 };
 
 export async function getSubs() {
-  const response = await fetch(url, {
-    method: "GET",
-    headers: headersList,
-  });
+  const response = await fetch(
+    "https://pxrbkchnbumeogupymca.supabase.co/rest/v1/Subscriptions"
+    // {
+    //   method: "GET",
+    //   headers: headersList,
+    // }
+  );
 
   const data = await response.json();
   return data;
