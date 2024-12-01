@@ -10,9 +10,10 @@ const headersList = {
 
 export async function getSubs() {
   const response = await fetch(url, {
-    method: "GET",
     headers: headersList,
   });
+
+  console.log(response);
 
   const data = await response.json();
   return data;
