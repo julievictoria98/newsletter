@@ -12,7 +12,7 @@ async function SingleView({ params }) {
   console.log("subscriber", subscriberArray);
 
   async function handleUpdate(FormData) {
-    // "use server";
+    "use server";
     const data = {
       name: FormData.get("name"),
       email: FormData.get("email"),
@@ -25,7 +25,7 @@ async function SingleView({ params }) {
   }
 
   async function handleDelete() {
-    // "use server";
+    "use server";
     await deleteSub(id);
     revalidatePath("/");
     redirect("/");
