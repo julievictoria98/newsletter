@@ -1,4 +1,4 @@
-import { postSub } from "../lib/api";
+import { postSub } from "@/app/lib/api";
 import { revalidatePath } from "next/cache";
 
 async function Newsletter() {
@@ -12,7 +12,7 @@ async function Newsletter() {
     };
     await postSub(data);
 
-    revalidatePath("/");
+    revalidatePath("/apitest");
   }
 
   return (

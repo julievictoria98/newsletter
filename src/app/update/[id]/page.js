@@ -1,10 +1,28 @@
-import { getSubById, deleteSub, updateSub } from "@/lib/api";
-import { revalidatePath } from "next/cache";
+import { getSubsById, updateSub, deleteSub } from "@/app/lib/api";
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 
-async function page({ params }) {
+async function SingleView({ params }) {
   const { id } = params;
-  const subscriber = await getSubById(id);
+
+  const subscriberArray = await getSubsById(id);
+  const subscriber = subscriberArray[0];
+
+  console.log("id", id);
+  console.log("subscriber", subscriberArray);
+
+  async function handleUpdate(FormData) {
+    "use server";
+    const data = {
+      name: FormData.get("name"),
+      email: FormData.get("email"),
+    };
+    console.log("FormData:", data);
+
+    await updateSub(id, data);
+    revalidatePath("/");
+    redirect("/");
+  }
 
   async function handleDelete() {
     "use server";
@@ -13,71 +31,53 @@ async function page({ params }) {
     redirect("/");
   }
 
-  async function handleUpdate(formData) {
-    "use server";
-
-    const email = formData.get("email");
-    const name = formData.get("name");
-
-    const data = {
-      email,
-      name,
-    };
-
-    console.log(email, name);
-
-    await updateSub(id, data);
-    revalidatePath("/");
-    redirect("/");
-  }
-
   return (
-    <div className="max-w-md mx-auto p-4 bg-white shadow-md rounded">
-      <h1 className="text-2xl font-bold mb-4">Update Subscriber</h1>
-      <form action={handleUpdate}>
-        <div className="mb-4">
-          <label htmlFor="name" className="block text-gray-700 font-bold mb-2">
+    <section className="grid justify-center items-center w-svw h-svh">
+      <form
+        action={handleUpdate}
+        className="bg-white w-72 rounded-lg p-3 grid gap-2 h-fit"
+      >
+        <legend>
+          <h1 className="text-black text-2xl">Update Subscriber</h1>
+        </legend>
+        <div className="flex flex-col">
+          <label htmlFor="name" className="text-black">
             Name
           </label>
           <input
             type="text"
+            defaultValue={subscriber.name}
             id="name"
             name="name"
-            defaultValue={subscriber.name}
-            className="w-full px-3 py-2 border border-gray-300 rounded"
+            className="bg-gray-100 text-black"
             required
           />
         </div>
-        <div className="mb-4">
-          <label htmlFor="email" className="block text-gray-700 font-bold mb-2">
+        <div className="flex flex-col">
+          <label htmlFor="email" className="text-black">
             Email
           </label>
           <input
             type="email"
+            defaultValue={subscriber.email}
             id="email"
             name="email"
-            defaultValue={subscriber.email}
-            className="w-full px-3 py-2 border border-gray-300 rounded"
+            className="bg-gray-100 text-black"
             required
           />
         </div>
-        <button
-          type="submit"
-          className="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700"
-        >
-          Update
-        </button>
+        <div className="flex justify-around">
+          <button
+            formAction={handleDelete}
+            className="bg-red-500 rounded-xl p-2 w-fit"
+          >
+            Delete
+          </button>
+          <button className="bg-blue-500 rounded-xl p-2">Save changes</button>
+        </div>
       </form>
-      <form action={handleDelete}>
-        <button
-          type="submit"
-          className="w-full bg-red-500 text-white py-2 px-4 rounded hover:bg-red-700 mt-4"
-        >
-          Delete Subscriber
-        </button>
-      </form>
-    </div>
+    </section>
   );
 }
 
-export default page;
+export default SingleView;

@@ -2,7 +2,7 @@
 // "use client";
 
 import Newsletter from "@/components/Newsletter";
-import { getSubs } from "../lib/api";
+import { getSubs } from "./lib/api";
 import Link from "next/link";
 
 async function page() {
