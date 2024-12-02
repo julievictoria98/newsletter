@@ -1,5 +1,6 @@
 // import { IoIosArrowForward } from "react-icons/io";
 // "use client";
+import "../app/style/global.css";
 
 import Newsletter from "@/components/Newsletter";
 import { getSubs } from "./lib/api";
